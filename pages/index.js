@@ -1,6 +1,7 @@
 import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box';
-import { AluraKutMenu } from '../src/lib/AluraCommons';
+import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AluraCommons';
+import { ProfileRelationsBoxWrapper } from '../src/components/profileRelations';
 
 function ProfileSideBar(props) {
   
@@ -13,22 +14,49 @@ function ProfileSideBar(props) {
 
 export default function Home() {
   const githubUser = 'luislimait';
+  const favoritePeople = [
+    'fernandaabreu', 
+    'omariosouto', 
+    'peas', 
+    'juunegreiros', 
+    'rafaballerini', 
+    'marcobrunodev',
+  ]
+
   return (
     <>
-      {/* <AluraKutMenu /> */}
+      <AlurakutMenu />
       <MainGrid>
         <div className="profileArea" style={{ gridArea: "profileArea" }}>
           <ProfileSideBar githubUser={githubUser}/>
         </div>
         <div className="welcomeArea" style={{ gridArea: "welcomeArea" }}>
           <Box>
-            Bem-Vindo
+            <h1 classname="title">
+              Bem-vindo(a)
+            </h1>
+
+            <OrkutNostalgicIconSet />
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: "profileRelationsArea" }}>
-          <Box>
-            Pessoas da Comunidade (Amigos(as))
-          </Box>
+          <ProfileRelationsBoxWrapper>
+            <h2 className="smallTitle">
+              Pessoas da Comunidade ({favoritePeople.length})
+            </h2>
+            <ul>
+              {favoritePeople.map((currentItem) => {
+                return (
+                  <li>
+                    <a href={`/users/${currentItem}`} key={currentItem}>
+                      <img src={`https://github.com/${currentItem}.png`} />
+                      <span>{currentItem}</span>
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </ProfileRelationsBoxWrapper>
         </div>
       </MainGrid>
     </>

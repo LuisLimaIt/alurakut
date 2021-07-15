@@ -35,7 +35,7 @@ function ProfileRelationsBox(props) {
               <li key={currentItem}>
                 <a href={`/users/${currentItem}`}>
                   <img src={`https://github.com/${currentItem.login}.png`} />
-                  <span>{currentItem.title}</span>
+                  <span>{currentItem.login}</span>
                 </a>
               </li>
             )
@@ -48,11 +48,7 @@ function ProfileRelationsBox(props) {
 
 export default function Home() {
   const githubUser = 'luislimait';
-  const [communities, setCommunities]= useState([{
-    title: "Eu odeio acordar cedo", 
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg',
-    id: '126398126378162361'
-  }]);
+  const [communities, setCommunities]= useState([]);
   const [text, setText] = useState('');
   const favoritePeople = [
     'fernandaabreu', 
@@ -66,7 +62,8 @@ export default function Home() {
   const [followers, setFollowers] = useState([]);
 
   useEffect(function(){
-    fetch("https://api.github.com/users/LuisLimaIt/followers")
+    // GET API GitHub
+    fetch('https://api.github.com/users/LuisLimaIt/followers')
     .then(function(resp) {
       if(resp.ok) {
         return resp.json()
@@ -75,6 +72,32 @@ export default function Home() {
     })
     .then(function(resp){
       setFollowers(resp)
+    })
+    .catch((erro) => {
+      console.log(erro)
+    })
+
+    // API GraphQL
+    fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers:{
+        'Authorization': 'df90e03b94490e658995b8e7882037',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }, 
+      body: JSON.stringify({ "query": `query {
+        allCommunities{
+          title,
+          id
+          imageUrl,
+          creatorSlug
+        }
+      }`})
+    })
+    .then((resp) => resp.json())
+    .then((resp) => {
+      const communitiesComingFromDato = resp.data.allCommunities;
+      setCommunities(communitiesComingFromDato);
     })
     .catch((erro) => {
       console.log(erro)
@@ -146,8 +169,8 @@ export default function Home() {
               {communities.map((currentItem) => {
                 return (
                   <li key={currentItem.id}>
-                    <a href={`/users/${currentItem.title}`}>
-                      <img src={currentItem.image} />
+                    <a href={`/communities/${currentItem.id}`}>
+                      <img src={currentItem.imageUrl} />
                       <span>{currentItem.title}</span>
                     </a>
                   </li>

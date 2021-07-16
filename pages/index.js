@@ -127,16 +127,30 @@ export default function Home() {
               e.preventDefault();
               const formData = new FormData(e.target);
 
-              const community = {
-                id: new Date().toISOString(),
-                title: formData.get('title'),
-                image: formData.get('image')
-
-              }
-              const updateCommunities=[...communities, community];
-              setCommunities(updateCommunities);
               console.log('Campo: ', formData.get('title'));
               console.log('Campo: ', formData.get('image'));
+
+              const community = {
+                title: formData.get('title'),
+                image: formData.get('image'),
+                creatorSlug: githubUser,
+              }
+
+              fetch('/api/communities', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(community)
+              })
+              .then(async (response) => {
+                const data = await response.json();
+                console.log(data.recordCreated)
+
+                const community = data.recordCreated;
+                const updateCommunities=[...communities, community];
+                setCommunities(updateCommunities)
+              })
             }}>
               <div>
                 <input 

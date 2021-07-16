@@ -87,9 +87,9 @@ export default function Home() {
       }, 
       body: JSON.stringify({ "query": `query {
         allCommunities{
-          title,
+          title
           id
-          imageUrl,
+          imageUrl
           creatorSlug
         }
       }`})
@@ -132,7 +132,7 @@ export default function Home() {
 
               const community = {
                 title: formData.get('title'),
-                image: formData.get('image'),
+                imageUrl: formData.get('image'),
                 creatorSlug: githubUser,
               }
 
@@ -180,15 +180,17 @@ export default function Home() {
               Comunidades ({communities.length})
             </h2>
             <ul>
-              {communities.map((currentItem) => {
-                return (
-                  <li key={currentItem.id}>
-                    <a href={`/communities/${currentItem.id}`}>
-                      <img src={currentItem.imageUrl} />
-                      <span>{currentItem.title}</span>
-                    </a>
-                  </li>
-                )
+              {communities.map((currentItem, i) => {
+                if(i <= 5) {
+                  return (
+                    <li key={currentItem.id}>
+                      <a href={`/communities/${currentItem.id}`}>
+                        <img src={currentItem.imageUrl} />
+                        <span>{currentItem.title}</span>
+                      </a>
+                    </li>
+                  )
+                }
               })}
             </ul>
           </ProfileRelationsBoxWrapper>
